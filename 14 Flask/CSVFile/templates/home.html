@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Read CSV</title>
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file && file.type === "text/csv") {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const text = e.target.result;
+                    parseCSV(text);
+                };
+
+                reader.readAsText(file);
+            } else {
+                alert("Please select a valid CSV file.");
+            }
+        }
+
+        function parseCSV(text) {
+            const lines = text.split("\n");
+            const table = document.createElement("table");
+            const tbody = document.createElement("tbody");
+
+            lines.forEach((line, index) => {
+                const tr = document.createElement("tr");
+                const cells = line.split(",");
+
+                cells.forEach(cell => {
+                    const td = document.createElement("td");
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+
+                tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody);
+            document.getElementById("csvTable").innerHTML = "";
+            document.getElementById("csvTable").appendChild(table);
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Upload and Read CSV File</h1>
+    <form>
+        <label for="csvFile">Choose CSV file:</label>
+        <input type="file" id="csvFile" accept=".csv" onchange="handleFileSelect(event)">
+    </form>
+    <div id="csvTable"></div>
+</body>
+
+</html>
